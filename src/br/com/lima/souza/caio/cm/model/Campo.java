@@ -89,7 +89,47 @@ public class Campo {
 		return this.vizinhos;
 	}
 	
+	
+	void setAberto(boolean aberto) {
+		this.aberto = aberto;
+	}
+
 	void minar() {
 		this.minado = true;
 	}
+	
+	boolean objAlcancado() {
+		boolean desvendado = !this.minado && this.aberto;
+		boolean protegido = this.minado && this.marcado;
+		return desvendado || protegido;
+	}
+	
+	long minasNaVizinhanca() {
+		return this.vizinhos.stream().filter(v -> v.minado).count();
+	}
+	
+	void reiniciar() {
+		this.aberto = false;
+		this.minado = false;
+		this.marcado = false;
+	}
+	
+	@Override
+	public String toString() {
+		String icon = "?";
+		
+		if(marcado) {
+			icon = "x";
+		} else if (this.aberto) {
+			if(this.minado) {
+				icon = "*";
+			}else if(this.minasNaVizinhanca() > 0) {
+				icon = Long.toString(this.minasNaVizinhanca());
+			}else {
+				icon = " ";
+			}
+		}
+		return icon;
+	}
+	
 }
